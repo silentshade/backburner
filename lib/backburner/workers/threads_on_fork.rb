@@ -159,7 +159,7 @@ module Backburner
 
       # This makes easy to test
       def fork_tube(name)
-        fork_it do
+        fork_it(name) do
           fork_inner(name)
         end
       end
@@ -239,10 +239,10 @@ module Backburner
       end
 
       # Forks the specified block and adds the process to the child process pool
-      def fork_it(&blk)
+      def fork_it(name = nil, &blk)
         pid = Kernel.fork do
           self.class.is_child = true
-          $0 = "[ThreadsOnFork worker] parent: #{Process.ppid}"
+          $0 = "[ThreadsOnFork at #{name}] parent: #{Process.ppid}"
           @connection = Connection.new(Backburner.configuration.beanstalk_url)
           blk.call
         end
