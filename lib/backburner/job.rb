@@ -78,7 +78,9 @@ module Backburner
       begin
         Timeout::timeout(secs) { yield }
       rescue Timeout::Error => e
-        raise JobTimeout, "#{name} hit #{secs}s timeout.\nbacktrace: #{e.backtrace}"
+        msg = ["#{name} hit #{secs}s timeout"]
+        msg += e.backtrace if e.backtrace && queue_config.trace_on_timeout
+        raise JobTimeout, msg.join("\n")
       end
     end
 
