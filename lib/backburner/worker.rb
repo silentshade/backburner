@@ -124,6 +124,8 @@ module Backburner
     #
     def work_one_job(conn = nil)
       conn ||= self.connection
+      queue_config.before_work.call if queue_config.before_work
+
       begin
         job = Backburner::Job.new(conn.tubes.reserve(Backburner.configuration.reserve_timeout))
       rescue Beaneater::TimedOutError => e

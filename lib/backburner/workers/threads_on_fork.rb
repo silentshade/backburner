@@ -173,11 +173,8 @@ module Backburner
       def fork_inner(name)
         watch_tube(name)
 
-        if @tubes_data[name]
-          queue_config.max_job_retries = @tubes_data[name][:retries] if @tubes_data[name][:retries]
-        else
-          @tubes_data[name] = {}
-        end
+        @tubes_data[name] ||= {}
+        queue_config.max_job_retries = @tubes_data[name][:retries] if @tubes_data[name][:retries]
         @garbage_after  = @tubes_data[name][:garbage]  || self.class.garbage_after
         @threads_number = (@tubes_data[name][:threads] || self.class.threads_number || 1).to_i
 
