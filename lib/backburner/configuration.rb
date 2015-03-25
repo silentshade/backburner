@@ -16,6 +16,7 @@ module Backburner
     attr_accessor :priority_labels    # priority labels
     attr_accessor :reserve_timeout    # duration to wait to reserve on a single server
     attr_accessor :trace_on_timeout   # enable/disable full trace when job timed out
+    attr_accessor :before_work
 
     def initialize
       @beanstalk_url     = "beanstalk://localhost"
@@ -32,6 +33,7 @@ module Backburner
       @priority_labels   = PRIORITY_LABELS
       @reserve_timeout   = nil
       @trace_on_timeout  = false
+      @before_work       = nil
     end
   end # Configuration
 end # Backburner
