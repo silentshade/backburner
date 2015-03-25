@@ -135,6 +135,8 @@ module Backburner
           fork_and_watch(name)
         end
 
+        monitor_tubes
+
         if lock
           sleep 0.1 while true
         end
@@ -250,6 +252,25 @@ module Backburner
       def connection
         @connection || super
       end
+
+      def new_tubes
+        existing_tubes - self.tube_names
+      end
+
+      def monitor_tubes
+        loop do
+          sleep 3
+          names = new_tubes
+          unless names.empty?
+            names.each do |name|
+              log_info "Received new tube #{name}"
+              self.tube_names << name
+              fork_and_watch(name)
+            end
+          end
+        end
+      end
+
     end
   end
 end
